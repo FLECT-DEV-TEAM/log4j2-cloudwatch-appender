@@ -82,6 +82,10 @@ public class CloudwatchAppender extends AbstractAppender {
 	     * The queue / buffer size
 	     */
 	    private int queueLength = 1024;
+	    /**
+	     * The queue / min exec size
+	     */
+	    private int minQueueLength = 0;
 	    
 	    private String awsAccessKey;
 	    private String awsAccessSecret;
@@ -105,6 +109,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	                           final String awsSecretKey,
 	                           final String awsRegion,
 	                           Integer queueLength,
+	                           Integer minQueueLength,
 	                           Integer messagesBatchSize,
 	                           String endpoint
 	                           ) {
@@ -115,6 +120,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	        this.awsAccessSecret = awsSecretKey;
 	        this.awsRegion = awsRegion;
 	        this.queueLength = queueLength;
+	        this.minQueueLength = minQueueLength;
 	        this.messagesBatchSize = messagesBatchSize;
 	        this.endpoint = endpoint;
 	        this.activateOptions();
@@ -162,7 +168,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	     Thread t = new Thread(() -> {
 	            while (true) {
 	                try {
-	                    if (loggingEventsQueue.size() > 0) {
+	                    if (loggingEventsQueue.size() > minQueueLength) {
 	                        sendMessages();
 	                    }
 	                    Thread.currentThread().sleep(20L);
@@ -312,6 +318,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	    @SuppressWarnings("unused")
 	    public static CloudwatchAppender createCloudWatchAppender(
 	      @PluginAttribute(value = "queueLength" ) Integer queueLength,
+	      @PluginAttribute(value = "minQueueLength", defaultInt = 0 ) Integer minQueueLength,
 	                                                  @PluginElement("Layout") Layout layout,
 	                                                  @PluginAttribute(value = "logGroupName") String logGroupName,
 	                                                  @PluginAttribute(value = "logStreamName") String logStreamName,
@@ -325,6 +332,6 @@ public class CloudwatchAppender extends AbstractAppender {
 	                                                  @PluginAttribute(value = "endpoint") String endpoint
 	                                                  )
 	    {
-	     return new CloudwatchAppender(name, layout, null, ignoreExceptions, logGroupName, logStreamName , awsAccessKey, awsSecretKey, awsRegion, queueLength,messagesBatchSize,endpoint);
+	     return new CloudwatchAppender(name, layout, null, ignoreExceptions, logGroupName, logStreamName , awsAccessKey, awsSecretKey, awsRegion, queueLength,minQueueLength, messagesBatchSize,endpoint);
 	    }
 	}
