@@ -27,7 +27,7 @@ Use this dependency in your Java/Mule Applications
 <dependency>
 	<groupId>com.java.javacodegeeks.log4j2.cloudwatch</groupId>
 	<artifactId>log4j2-cloudwatch-appender</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<type>jar</type>
 </dependency>
 ```
@@ -43,7 +43,8 @@ Use this dependency in your Java/Mule Applications
 		awsRegion="<your AWS region>" 
 		endpoint="<your CloudWatch VPC Endpoint>" 
 		messagesBatchSize="5"
-		queueLength="100">
+		queueLength="100"
+		sleepTime="20">
 		<PatternLayout
 			pattern="%-5p %d [%t] %X{correlationId}%c: %m%n" /> 
 	</CLOUDW>
