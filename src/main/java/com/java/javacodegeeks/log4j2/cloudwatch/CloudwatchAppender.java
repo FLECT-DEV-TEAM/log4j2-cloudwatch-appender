@@ -92,6 +92,8 @@ public class CloudwatchAppender extends AbstractAppender {
 	     * The maximum number of log entries to send in one go to the AWS Cloudwatch Log service
 	     */
 	    private int messagesBatchSize = 128;
+	
+		private long sleepTime = 20L;
 	 
 	    private AtomicBoolean cloudwatchAppenderInitialised = new AtomicBoolean(false);
 	  
@@ -106,7 +108,8 @@ public class CloudwatchAppender extends AbstractAppender {
 	                           final String awsRegion,
 	                           Integer queueLength,
 	                           Integer messagesBatchSize,
-	                           String endpoint
+	                           String endpoint,
+	                           Long sleepTime
 	                           ) {
 	        super(name, filter, layout, ignoreExceptions);
 	        this.logGroupName = logGroupName;
@@ -117,6 +120,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	        this.queueLength = queueLength;
 	        this.messagesBatchSize = messagesBatchSize;
 	        this.endpoint = endpoint;
+	        this.sleepTime = sleepTime;
 	        this.activateOptions();
 	    }
 	 
@@ -165,7 +169,7 @@ public class CloudwatchAppender extends AbstractAppender {
 	                    if (loggingEventsQueue.size() > 0) {
 	                        sendMessages();
 	                    }
-	                    Thread.currentThread().sleep(20L);
+	                    Thread.currentThread().sleep(sleepTime);
 	                } catch (InterruptedException e) {
 	                    if (DEBUG_MODE) {
 	                        e.printStackTrace();
@@ -322,9 +326,10 @@ public class CloudwatchAppender extends AbstractAppender {
 	                                                  @PluginAttribute(value = "ignoreExceptions", defaultBoolean = false) Boolean ignoreExceptions,
 	                                                   
 	                                                  @PluginAttribute(value = "messagesBatchSize") Integer messagesBatchSize,
-	                                                  @PluginAttribute(value = "endpoint") String endpoint
+	                                                  @PluginAttribute(value = "endpoint") String endpoint,
+	                                                  @PluginAttribute(value = "sleepTime", defaultLong = 20L) Long sleepTime
 	                                                  )
 	    {
-	     return new CloudwatchAppender(name, layout, null, ignoreExceptions, logGroupName, logStreamName , awsAccessKey, awsSecretKey, awsRegion, queueLength,messagesBatchSize,endpoint);
+	     return new CloudwatchAppender(name, layout, null, ignoreExceptions, logGroupName, logStreamName , awsAccessKey, awsSecretKey, awsRegion, queueLength,messagesBatchSize,endpoint, sleepTime);
 	    }
 	}
