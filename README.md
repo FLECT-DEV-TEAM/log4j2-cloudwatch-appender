@@ -39,7 +39,7 @@ Use this dependency in your Java/Mule Applications
 	<CLOUDW name="CloudW" logGroupName="<your CloudWatch group name>"
 		logStreamName="<your Mule app name>-${sys:environment}"
 		awsAccessKey="<your AWS access key>" 
-        awsSecretKey="<your AWS secret key>"
+		awsSecretKey="<your AWS secret key>"
 		awsRegion="<your AWS region>" 
 		endpoint="<your CloudWatch VPC Endpoint>" 
 		messagesBatchSize="5"
