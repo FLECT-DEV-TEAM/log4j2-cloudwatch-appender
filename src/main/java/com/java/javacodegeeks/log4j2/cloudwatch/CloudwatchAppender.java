@@ -192,6 +192,9 @@ public class CloudwatchAppender extends AbstractAppender {
 	 
 	                while ((polledLoggingEvent = (LogEvent) loggingEventsQueue.poll()) != null && loggingEvents.size() <= messagesBatchSize) {
 	                    loggingEvents.add(polledLoggingEvent);
+						if (loggingEvents.size() == messagesBatchSize) {
+							break;
+						}
 	                }
 	               
 	                List inputLogEvents = loggingEvents.stream()
